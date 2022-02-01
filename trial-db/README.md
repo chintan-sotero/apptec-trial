@@ -1,7 +1,7 @@
-# Learn Terraform - Manage AWS RDS
+This repository will create a postgreSQL production and QA database in RDS. It expected VPC ID and Subnet ID as input to create these database instances. Please update these values based on output from trial-vpc run.
 
-This is a companion repository for the [Manage RDS Instances
-guide](https://learn.hashicorp.com/tutorials/terraform/aws-rds) on [HashiCorp
-Learn](https://learn.hashicorp.com/). It contains Terraform conifguration files
-for you to use to learn how to provision and manage AWS RDS resources using
-Terraform.
+After success completion of database creation, run the following commands to upload a dataset in both DB:
+
+1. terraform output rds_password_prod - this command will give database password in cleartext
+2. psql -h $(terraform output -raw rds_hostname_prod) -p $(terraform output -raw rds_port_prod) -U $(terraform output -raw rds_username_prod) postgres < employees_data.sql - this command will prompt for database password and then load sample HR databset in production database.
+3. psql -h $(terraform output -raw rds_hostname_qa) -p $(terraform output -raw rds_port_qa) -U $(terraform output -raw rds_username_qa) postgres < employees_schema.sql - This is same as 2 but will upload database schema in QA database. We are not to load any dataset in QA environment
